@@ -1,0 +1,18 @@
+Variable,Description
+cogs,Cost of Goods Sold
+dp,Depreciation and Amortization
+ib,Income Before Extraordinary Items
+mii,Noncontrolling Interest (Income Account)
+ni,Net Income (Loss)
+nopi,Nonoperating Income (Expense)
+oibdp,Operating Income Before Depreciation
+pi,Pretax Income
+pidom,Pretax Income - Domestic
+pifo,Pretax Income - Foreign
+sale,Sales/Turnover (Net)
+logsale,logarithmic transformation of net sales
+spi,Special Items
+txt,Income Taxes - Total
+xido,Extraordinary Items and Discontinued Operations
+xint,Interest and Related Expense - Total
+xsga,"Selling, General and Administrative Expense"

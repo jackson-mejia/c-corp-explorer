@@ -1,0 +1,29 @@
+Variable,Description
+aco,Current Assets - Other - Total
+act,Current Assets - Total
+ao,Assets - Other
+ap,Accounts Payable - Trade
+at,Assets - Total
+caps,Capital Surplus/Share Premium Reserve
+ceq,Common/Ordinary Equity - Total
+che,Cash and Short-Term Investments
+cstk,Common/Ordinary Stock (Capital)
+dlc,Debt in Current Liabilities - Total
+dltt,Long-Term Debt - Total
+intan,Intangible Assets - Total
+invt,Inventories - Total
+ivaeq,Investment and Advances - Equity
+ivao,Investment and Advances - Other
+lco,Current Liabilities - Other - Total
+lct,Current Liabilities - Total
+lo,Liabilities - Other - Total
+lt,Liabilities - Total
+mib,Noncontrolling Interest (Balance Sheet)
+ppent,"Property, Plant and Equipment - Total (Net)"
+pstk,Preferred/Preference Stock (Capital) - Total
+re,Retained Earnings
+rect,Receivables - Total
+seq,Stockholders Equity - Parent
+tstk,Treasury Stock - Total (All Capital)
+txditc,Deferred Taxes and Investment Tax Credit
+txp,Income Taxes Payable

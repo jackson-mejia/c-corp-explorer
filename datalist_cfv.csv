@@ -1,0 +1,23 @@
+Variable,Description
+aqc,Acquisitions
+capx,Capital Expenditures
+dlcch,Current Debt - Changes
+dltis,Long-Term Debt - Issuance
+dltr,Long-Term Debt - Reduction
+dpc,Depreciation and Amortization (Cash Flow)
+dv,Cash Dividends (Cash Flow)
+esubc,Equity in Net Loss - Earnings
+fopo,Funds from Operations - Other
+fopt,Funds From Operations - Total
+fsrco,Sources of Funds - Other
+fuseo,Uses of Funds - Other
+ibc,Income Before Extraordinary Items (Cash Flow)
+ivch,Increase in Investments
+prstkc,Purchase of Common and Preferred Stock
+siv,Sale of Investments
+sppe,Sale of Property
+sppiv,"Sale of Property, Plant and Equipment and Investments - Gain (Loss)"
+sstk,Sale of Common and Preferred Stock
+txdc,Deferred Taxes (Cash Flow)
+wcapc,Working Capital Change - Other - Increase/(Decrease)
+xidoc,Extraordinary Items and Discontinued Operations (Cash Flow)

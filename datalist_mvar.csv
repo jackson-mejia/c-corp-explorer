@@ -1,0 +1,14 @@
+Variable,Description
+age,age of firm
+avg_sale,average sales over the period 2009-2018
+csho,Common Shares Outstanding
+dvc,Dividends Common/Ordinary
+dvp,Dividends - Preferred/Preference
+prcc_f,Price Close - Annual - Fiscal
+pstkrv,Preferred Stock - Redemption Value
+sale_weight,sale weight
+xad,Advertising Expense
+xrd,Research and Development Expense
+xrd_shock,Research and development expense divided by average sales
+xrd_norm,R&D divided by sales
+mktcap,market capitalization

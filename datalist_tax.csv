@@ -1,0 +1,14 @@
+Variable,Description
+effective_rate_comp,Effective tax rate calculated using Compustat's pretax income (pi) and income taxes paid (txt)
+Effective_Rate,Effective tax rate from parsed 10-K filings
+Foreign_Rate,Effective tax rate paid on foreign operations
+ESOP_Rate,Tax rate paid on employee stock ownership plans
+Other_Rate,adjustment to tax rate based on other items
+RD_Rate,adjustment to tax rate based on R&D
+SL_Rate,state and local tax rate
+Stat_Rate,statutory tax rate
+TaxCon_Rate,tax contingencies tax rate
+TaxCred_Rate,tax credits tax rate
+TS_Rate,tax settlements tax rate
+TS_F_Rate,Foreign tax settlements tax rate
+VA_Rate,valuation allowance tax rate

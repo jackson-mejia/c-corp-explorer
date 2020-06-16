@@ -1,0 +1,14 @@
+Variable,Description
+cik,CIK Number
+conm,Company Name
+consol,Level of Consolidation - Company Annual Descriptor
+cusip,CUSIP
+fic,Current ISO Country Code - Incorporation
+fyear,Data Year - Fiscal
+gvkey,Global Company Key
+indfmt,Industry Format
+ipodate,Initial public offering date
+NAICS,"2 digit NAICS code with 31-33 collapsed to 31, 44-45 collapsed to 44, and 48-49 collapsed to 48"
+naicsh,North America Industrial Classification System - Historical
+sich,Standard Industrial Classification - Historical
+tic,Ticker Symbol
