@@ -11,78 +11,95 @@ library(DT)
 library(kableExtra)
 library(shinyWidgets)
 library(shinythemes)
+library(shinycssloaders)
+library(feather)
+library(rstatix)
+
+datalist_cvar <- fread("datalist_cvar.csv")
+
+datalist_bal <- fread("datalist_bal.csv")
+
+datalist_mvar <- fread("datalist_mvar.csv")
+
+datalist_isv <- fread("datalist_isv.csv")
+
+datalist_cfv <- fread("datalist_cfv.csv")
+
+datalist_tax <- fread("datalist_tax.csv")
+
+datalist_full <- fread("datalist_full.csv")
+
+naics_def <- fread("naics_list.csv")
+
+# 
+# nu_compustat <-fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/10k_compustat_2009_2019.csv")
+# none <- "None"
+# nu_compustat[, none] <- NA
+# nu_comp_clean <-
+#   subset(
+#     nu_compustat,
+#     xrd_norm < 1 &
+#       sale > 0 &
+#       abs(Effective_Rate) < 200 ,
+#     select = c(
+#       "logsale",
+#       "logsale.percentile",
+#       "tic",
+#       "sale",
+#       "fyear",
+#       "NAICS",
+#       "sale",
+#       "xrd_shock",
+#       "Effective_Rate",
+#       "Foreign_Rate",
+#       "None"
+#     )
+#   )
+# 
+# nu_comp_clean$tic <- as.factor(nu_comp_clean$tic)
+# 
+# q_sale <-
+#   nu_comp_clean %>% group_by(fyear) %>% summarise("nu_comp_clean_q_sale" = quantile(sale, 0.9, na.rm = T)) %>% ungroup()
+# 
+# 
+# nu_comp_clean_q_sale <-
+#   subset(nu_comp_clean,
+#          fyear == 2012 & sale > q_sale$nu_comp_clean_q_sale[4])
+# 
+# q_sale_tic <- nu_comp_clean_q_sale$tic
+# 
+# nu_comp_clean_q_sale <-
+#   nu_comp_clean[nu_comp_clean$tic %in% q_sale_tic, ]
+# 
+# nu_comp_clean_q_sale$quant_sale <-
+#   quantcut(nu_comp_clean_q_sale$logsale, q = 10, na.rm = T) #factorizes into quantiles for effective rates
+# 
+# wgt_vec <-as.vector(matrix(1/nrow(nu_comp_clean_q_sale),nrow=nrow(nu_comp_clean_q_sale)))
+# 
+# nu_comp_clean_q_sale <-
+#   mutate(
+#     nu_comp_clean_q_sale,
+#     filt = as.numeric(nu_comp_clean_q_sale$NAICS) * as.numeric(nu_comp_clean_q_sale$quant_sale),
+#     naics = NAICS,
+#     equal_weight = wgt_vec
+#   )
+
+nu_comp_clean_q_sale <- read_feather("C:\\Users\\Jackson_Mejia\\Documents\\ERM_Practice\\mcgrattan_app\\compustat_speedway_parsed.feather")
+
+nu_comp_clean_q_sale <- as.data.frame(nu_comp_clean_q_sale)
+
+nu_comp_clean_q_sale <- subset(nu_comp_clean_q_sale, !is.na(NAICS) & fyear >= 2010 & logsale > 10)
 
 
-datalist_cvar <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_cvar.csv")
+yr <- c(2010, 2011, 2012)
+# 
+# nu_comp_clean_q_sale <- mutate(nu_comp_clean_q_sale, logsale = logsale)
+# 
+# nu_comp_clean_q_sale <- nu_comp_clean_q_sale[, !duplicated(colnames(nu_comp_clean_q_sale), fromLast = TRUE)] 
+# 
+# nu_comp_clean_q_sale[, -which(names(nu_comp_clean_q_sale) == "logsale")]  #only works on a single column
 
-datalist_bal <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_bal.csv")
-
-datalist_mvar <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_mvar.csv")
-
-datalist_isv <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_isv.csv")
-
-datalist_cfv <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_cfv.csv")
-
-datalist_tax <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_tax.csv")
-
-datalist_full <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/datalist_full.csv")
-
-naics_def <- fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/mcgrattan_app/naics_list.csv")
-
-nu_compustat <-fread("C:/Users/Jackson_Mejia/Documents/ERM_Practice/10k_compustat_2009_2019.csv")
-none <- "None"
-nu_compustat[, none] <- NA
-nu_comp_clean <-
-  subset(
-    nu_compustat,
-    xrd_norm < 1 &
-      sale_weight > 0 &
-      abs(Effective_Rate) < 200 ,
-    select = c(
-      "logsale",
-      "logsale.percentile",
-      "tic",
-      "sale",
-      "fyear",
-      "NAICS",
-      "sale_weight",
-      "xrd_shock",
-      "Effective_Rate",
-      "Foreign_Rate",
-      "None"
-    )
-  )
-
-nu_comp_clean$tic <- as.factor(nu_comp_clean$tic)
-
-q_sale <-
-  nu_comp_clean %>% group_by(fyear) %>% summarise("nu_comp_clean_q_sale" = quantile(sale, 0.9, na.rm = T)) %>% ungroup()
-
-
-nu_comp_clean_q_sale <-
-  subset(nu_comp_clean,
-         fyear == 2012 & sale > q_sale$nu_comp_clean_q_sale[4])
-
-q_sale_tic <- nu_comp_clean_q_sale$tic
-
-nu_comp_clean_q_sale <-
-  nu_comp_clean[nu_comp_clean$tic %in% q_sale_tic, ]
-
-nu_comp_clean_q_sale$quant_sale <-
-  quantcut(nu_comp_clean_q_sale$logsale, q = 10, na.rm = T) #factorizes into quantiles for effective rates
-
-wgt_vec <-as.vector(matrix(1/nrow(nu_comp_clean_q_sale),nrow=nrow(nu_comp_clean_q_sale)))
-
-nu_comp_clean_q_sale <-
-  mutate(
-    nu_comp_clean_q_sale,
-    filt = as.numeric(nu_comp_clean_q_sale$NAICS) * as.numeric(nu_comp_clean_q_sale$quant_sale),
-    naics = NAICS,
-    equal_weight = wgt_vec
-  )
-
-nu_comp_clean_q_sale <- subset(nu_comp_clean_q_sale, !is.na(NAICS))
-
+#n
 #Theme Functions
 my_econ_white <- theme_economist_white() +
   theme(axis.title.y = element_text(margin = margin(
@@ -138,19 +155,19 @@ ui <-
                fluidRow(column(width = 8, offset = 2,
                                h1("Select Variables"),
                                h4("Instructions"),
-                               p("Use this tab to select variables. Note that several variables are required for analysis and are automatically included. These are fyear, tic, sale_weight, and NAICS. While it is not required that logsale or xrd or Effective_Rate be included, they are included by default."),
+                               p("Use this tab to select variables. Note that several variables are required for analysis and are automatically included. These are fyear, tic, sale, and NAICS. While it is not required that logsale or xrd or Effective_Rate be included, they are included by default."),
                                hr())),
                fluidRow(column(width = 4, offset = 2,
                                      h3("Data Variables"),
                                selectizeInput(
                                  inputId ='var_select', label = "Choose which variables you want for analysis:", 
-                                 choices = c(names(nu_comp_clean_q_sale[, !names(nu_comp_clean_q_sale) %in% c("tic", "NAICS", "fyear", "sale_weight")])), multiple = TRUE, options = list(placeholder = 'Select variables'), selected = c("logsale", "Effective_Rate", "xrd")
+                                 choices = c(names(nu_comp_clean_q_sale[, !names(nu_comp_clean_q_sale) %in% c("tic", "NAICS", "fyear")])), multiple = TRUE, options = list(placeholder = 'Select variables'), selected = c("Effective_Rate", "xrd", "sale")
                                ),
                                
                                # pickerInput(
                                #         inputId = "var_select",
                                #         label = "Choose which variables you want for analysis:", 
-                               #         choices = names(nu_comp_clean_q_sale[, !names(nu_comp_clean_q_sale) %in% c("tic", "NAICS", "fyear", "sale_weight")]),
+                               #         choices = names(nu_comp_clean_q_sale[, !names(nu_comp_clean_q_sale) %in% c("tic", "NAICS", "fyear", "sale")]),
                                #         selected = NULL,
                                #         options = list(
                                #           `actions-box` = TRUE), 
@@ -389,19 +406,23 @@ ui <-
                        sliderInput("trunc_hist", label = h3("Truncation Range"), min = 0, 
                                    max = 1, value = c(.01, .99))
                      ),
-                     mainPanel(plotlyOutput("hist1"),
+                     mainPanel(plotlyOutput("hist1") %>% withSpinner(color="#0dc5c1"),
                                br(),
                                hr()
                      )
                    )
                  ))),
                tabPanel("Summary Statistics",
+                        fluidRow(column(
+                          12,
+                          h1("Summary Statistics"),
+                          p("View summary statistics on this tab."),
+                          h4("Instructions"),
+                          p("Choose which variable to view summary statistics for. Choose to weight equally or by sales weight. If desired, choose NAICS codes to subset by."),
+                          hr())),
                         fluidRow(
                           sidebarPanel(
                             width = 3,
-                            helpText(
-                              "Choose which variable to view summary statistics for. Choose to weight equally or by sales weight. If desired, choose a particular NAICS code to subset by."
-                            ),
                             pickerInput(
                               inputId = "sumstat",
                               label = h3("Summary statistics variable:"),
@@ -435,8 +456,55 @@ ui <-
                           #                     }")))
                           
                         )),
-               tabPanel("Outlier Analysis")
-             )),
+               tabPanel("Outlier Analysis",
+                        fluidRow(column(
+                          12,
+                          h1("Outlier Analys"),
+                          p("Conduct outlier analysis on this tab using both a boxplot and a table view.."),
+                          h4("Instructions"),
+                          p("First, choose which variable to view a boxplot for. Then choose whether to group by NAICS code, year, or no group at all. Then choose whether to subset by year or NAICS code. Under the boxplot, view rows of outliers and decide which variables to view. An option to download as a csv is available."),
+                          hr())),
+                        fluidRow(
+                          sidebarPanel(width = 3,
+                                       pickerInput(inputId = "boxvar_1", label = "Select variables", choices = c(""), options = list(title = "This is a placeholder",
+                                                                                                                                   `actions-box` = TRUE)
+                                       ),
+                                       prettyRadioButtons(
+                                         inputId = "boxfacet",
+                                         label = "Choose whether to group and if so, then by year or industry:", 
+                                         choices = c("None","Year", "Industry"),
+                                         inline = TRUE, 
+                                         status = "danger",
+                                         fill = TRUE
+                                       ),
+                                       pickerInput(inputId = "boxyear_1", label = "Select years", choices = c(""), options = list(title = "This is a placeholder",
+                                                                                                                                `actions-box` = TRUE), multiple = TRUE),
+                                       
+                                       pickerInput(inputId = "boxnaics_1", label = "Select industries", choices = c(""),options = list(title = "This is a placeholder",
+                                                                                                                                     `actions-box` = TRUE),
+                                                   multiple = TRUE),
+                                       br(),
+                                       br(),
+                                       br(),
+                                       br(),
+                                       hr(),
+                                       checkboxGroupInput(
+                                         "show_vars_outliers",
+                                         "Columns in dataframe to show:",
+                                         choices = c("tic", "NAICS", "fyear"),
+                                         selected = c("tic", "NAICS", "fyear")
+                                       ),
+                                       downloadButton("downloadData_outliers", "Download")
+                                       ),
+                          
+                          mainPanel(plotlyOutput("boxplot1") %>% withSpinner(color="#0dc5c1"),
+                                    hr(),
+                                    DT::dataTableOutput("mydata_outliers", height = "100%"),
+                                    br(),
+                                    hr()
+                                    
+                          ))
+               )             )),
     
     
     tabPanel("Line Plots",
@@ -481,7 +549,7 @@ ui <-
             pickerInput("line_year", label = h5("in the year"), choices = c(""))
           ),
           
-          mainPanel(plotlyOutput("Ellen", height = 500),
+          mainPanel(plotlyOutput("Ellen", height = 500) %>% withSpinner(color="#0dc5c1"),
                     br(),
                     hr())
         )
@@ -515,7 +583,7 @@ ui <-
                    pickerInput("line_year_1", label = h5("in the year"), choices = c(""))
                  ),
                  
-                 mainPanel(plotlyOutput("Ellen_naics", height = 500),
+                 mainPanel(plotlyOutput("Ellen_naics", height = 500) %>% withSpinner(color="#0dc5c1"),
                            br(),
                            hr())
                )),
@@ -557,7 +625,7 @@ ui <-
                    pickerInput("line_year_2", label = h5("in the year"), choices = c(""))
                  ),
                  
-                 mainPanel(plotlyOutput("Ellen_single_firm", height = 500),
+                 mainPanel(plotlyOutput("Ellen_single_firm", height = 500) %>% withSpinner(color="#0dc5c1"),
                            br(),
                            hr())
                ))
@@ -603,7 +671,7 @@ ui <-
                                                                                                                               `actions-box` = TRUE))
         ),
         mainPanel(
-          plotlyOutput("Anmol", height = 500),
+          plotlyOutput("Anmol", height = 500) %>% withSpinner(color="#0dc5c1"),
           br(),
           hr()
         )
@@ -649,11 +717,11 @@ tabPanel("Regression",tabsetPanel(tabPanel(
       br(),
       hr(),
       br(),
-      plotlyOutput("fittdPlot"),
+      plotlyOutput("fittdPlot") %>% withSpinner(color="#0dc5c1"),
       br(),
       hr(),
       br(),
-      plotlyOutput("residualPlot"),
+      plotlyOutput("residualPlot") %>% withSpinner(color="#0dc5c1"),
       br(),
       hr()
       )
@@ -763,8 +831,8 @@ server <- function(input, output, session) {
         df_2 <- df_ellen
         
         df_sale <- df_2 %>% group_by(fyear) %>% summarise(
-          "lower" = quantile(df_2[,input$var_sub_line_2], input$trunc_line_2[1], na.rm = T),
-          "upper" = quantile(df_2[,input$var_sub_line_2], input$trunc_line_2[2], na.rm = T)
+          "lower" = stats::quantile(df_2[,get(input$var_sub_line_2)], input$trunc_line_2[1], na.rm = T),
+          "upper" = stats::quantile(df_2[,get(input$var_sub_line_2)], input$trunc_line_2[2], na.rm = T)
         ) %>% ungroup()
         
         df_sale <- filter(df_sale, fyear == input$line_year_2)
@@ -793,79 +861,93 @@ server <- function(input, output, session) {
   
   
    observe({
-    varselect <- c(input$var_select)
+    varselect_1 <- c(input$var_select)
    
-     updatePickerInput(session, inputId = "var_sub", choices = varselect )
+     updatePickerInput(session, inputId = "var_sub", choices = varselect_1 )
      
-     updatePickerInput(session, inputId = "var_sub_1", choices = varselect)
+     updatePickerInput(session, inputId = "var_sub_1", choices = varselect_1)
      
      updatePickerInput(session, inputId = "var_sub_2",
-                       choices = varselect)
+                       choices = varselect_1)
      
      updatePickerInput(session, inputId = "var_sub_3",
-                       choices = varselect)
+                       choices = varselect_1)
      
      updatePickerInput(session, inputId = "var_panel",
-                       choices = varselect)
+                       choices = varselect_1)
   
-      updateCheckboxGroupInput(session, inputId = "show_vars_dv", choices = c("tic", "fyear", "NAICS", "sale_weight", varselect), selected = c("tic", "fyear", "NAICS"))
+    updateCheckboxGroupInput(session, inputId = "show_vars_dv", choices = c("tic", "fyear", "NAICS", varselect_1), selected = c("tic", "fyear", "NAICS"))
+       
+    updateCheckboxGroupInput(session, inputId = "show_vars_outliers", choices = c("tic", "fyear", "NAICS", varselect_1), selected = c("tic", "fyear", "NAICS"))
     
-      updatePickerInput(session, inputId = "scatter", choices = varselect, selected = varselect[1])
+    
+       updatePickerInput(session, inputId = "scatter", choices = varselect_1, selected = varselect_1[1])
+       
+       updatePickerInput(session, inputId = "scatter_1", choices = varselect_1, selected = varselect_1[1])
+       
+      updatePickerInput(session, inputId = "scatter_2", choices = varselect_1, selected = varselect_1[1])
 
-      updatePickerInput(session, inputId = "scatter_1", choices = varselect, selected = varselect[1])
+
+      updatePickerInput(session, inputId = "scatter_a", choices = varselect_1, selected = varselect_1[1])
+
+      updatePickerInput(session, inputId = "hist", choices = varselect_1, selected = varselect_1[1])
+
+      updatePickerInput(session, inputId = "sumstat", choices = varselect_1, selected = varselect_1[1])
       
-      updatePickerInput(session, inputId = "scatter_2", choices = varselect, selected = varselect[1])
+      updatePickerInput(session, inputId = "boxvar", choices = varselect_1, selected = varselect_1[1])
       
-            
-      updatePickerInput(session, inputId = "scatter_a", choices = varselect, selected = varselect[1])
-      
-      updatePickerInput(session, inputId = "hist", choices = varselect, selected = varselect[1])
-      
-      updatePickerInput(session, inputId = "sumstat", choices = varselect, selected = varselect[1])
-      
-      updatePickerInput(session, inputId = "var_sub_line", choices = c("None selected", varselect), selected = "None selected")
-      
-      updatePickerInput(session, inputId = "var_sub_line_1", choices = c("None selected", varselect), selected = "None selected")
-      
-      updatePickerInput(session, inputId = "var_sub_scatter", choices = c("None selected", varselect), selected = "None selected")
-      
-      updatePickerInput(session, inputId = "scatter_size", choices = c("None selected", varselect), selected = "None selected")
-      
-      updateCheckboxGroupInput(session, inputId = "show_vars_resid", choices = c(varselect,"tic", "fyear", "NAICS", "sale_weight", "residuals"), select = c("tic", "fyear", "NAICS", "residuals"))
-      
+      updatePickerInput(session, inputId = "boxvar_1", choices = varselect_1, selected = varselect_1[1])
+
+      updatePickerInput(session, inputId = "var_sub_line", choices = c("None selected", varselect_1), selected = "None selected")
+
+      updatePickerInput(session, inputId = "var_sub_line_1", choices = c("None selected", varselect_1), selected = "None selected")
+
+      updatePickerInput(session, inputId = "var_sub_scatter", choices = c("None selected", varselect_1), selected = "None selected")
+
+      updatePickerInput(session, inputId = "scatter_size", choices = c("None selected", varselect_1), selected = "None selected")
+
+      updateCheckboxGroupInput(session, inputId = "show_vars_resid", choices = c(varselect_1,"tic", "fyear", "NAICS", "residuals"), select = c("tic", "fyear", "NAICS", "residuals"))
+
       naics_list <- c(input$naics_select)
-      
+
       updatePickerInput(session, inputId = "ssnaics", choices = c(naics_list), selected = naics_list)
-      
+
       updatePickerInput(session, inputId = "linenaics", choices = c(naics_list), selected = naics_list)
-      
+
       updatePickerInput(session, inputId = "linenaics_1", choices = c(naics_list), selected = naics_list)
-      
+
       updatePickerInput(session, inputId = "scatternaics", choices = c(naics_list), selected = naics_list)
-      
+
       updatePickerInput(session, inputId = "hist_naics", choices = c(naics_list), selected = naics_list)
       
-      yr_select <- c(input$year_select)
-  
-      updatePickerInput(session, inputId = "var_panel_yr", choices = c(yr_select))
+      updatePickerInput(session, inputId = "boxnaics", choices = c(naics_list), selected = naics_list)
       
-      updatePickerInput(session, inputId = "hist_yr", choices = c(yr_select), selected = yr_select)
-      
-      updatePickerInput(session, inputId = "line_year", choices = c(yr_select), selected = yr_select)
+      updatePickerInput(session, inputId = "boxnaics_1", choices = c(naics_list), selected = naics_list)
 
-      updatePickerInput(session, inputId = "line_year_1", choices = c(yr_select), selected = yr_select)
-      
-      updatePickerInput(session, inputId = "scatter_year", choices = c(yr_select), selected = yr_select)
-      
-      tic_select <- tic_choices()
-      
-      updateSelectizeInput(session, inputId = "line_tic", choices = tic_select$tic_choices1, selected = tic_select$tic_choices1[1])
-      
-      
-      
+       yr_select <- c(input$year_select)
+       
+       updatePickerInput(session, inputId = "var_panel_yr", choices = c(yr_select))
+       
+       updatePickerInput(session, inputId = "hist_yr", choices = c(yr_select), selected = yr_select)
+       
+       updatePickerInput(session, inputId = "line_year", choices = c(yr_select), selected = yr_select)
+       
+       updatePickerInput(session, inputId = "line_year_1", choices = c(yr_select), selected = yr_select)
+       
+       updatePickerInput(session, inputId = "scatter_year", choices = c(yr_select), selected = yr_select)
+       
+       updatePickerInput(session, inputId = "boxyear", choices = c(yr_select), selected = yr_select)
+       
+       updatePickerInput(session, inputId = "boxyear_1", choices = c(yr_select), selected = yr_select)
+       
+       
     })
   
-  
+  observe({
+    tic_select <- tic_choices()
+    
+    updateSelectizeInput(session, inputId = "line_tic", choices = tic_select$tic_choices1, selected = tic_select$tic_choices1[1])
+  })
   
   
   ##Defining DF
@@ -873,7 +955,7 @@ server <- function(input, output, session) {
   
   df_1 <- reactive({
 
-      df_1 <- nu_comp_clean_q_sale[, c("tic", "fyear", "NAICS", "sale_weight", "logsale", input$var_select)]
+      df_1 <- nu_comp_clean_q_sale[, c("tic", "fyear", "NAICS", "logsale", input$var_select)]
       
       df_1 <- filter(df_1, NAICS %in% input$naics_select)
       df_1 <- filter(df_1, fyear %in% input$year_select)
@@ -967,6 +1049,8 @@ server <- function(input, output, session) {
       if(!is.null(input$var_select)){
       df <- filter(df_1(), fyear %in% c(input$hist_yr), NAICS %in% c(input$hist_naics)) 
       
+      df <- as.data.frame(df)
+      
       hist1 <- plot_ly(data = df,
                        x = ~get(input$hist),
                        type = "histogram",
@@ -976,7 +1060,8 @@ server <- function(input, output, session) {
       hist1 <- hist1 %>% layout(
         title = 'Histogram',
         xaxis = list(title = input$hist,
-                     range=c(quantile(df[, (input$hist)], input$trunc_hist[1], na.rm = T), quantile(df[, (input$hist)], input$trunc_hist[2], na.rm = T))),
+                     
+                     range=c(quantile(df[, input$hist], input$trunc_hist[1], na.rm = T), quantile(df[, input$hist], input$trunc_hist[2], na.rm = T))),
         yaxis = list(title = "Probability"))
       
       hist1
@@ -997,13 +1082,13 @@ server <- function(input, output, session) {
           df <- filter(df_ss, NAICS %in% c(input$ssnaics)) 
           
           sstab <- df %>% group_by(fyear) %>% summarise(
-            "Average" = weighted.mean(get(input$sumstat), w = sale_weight, na.rm = T),
+            "Average" = weighted.mean(get(input$sumstat), w = sale, na.rm = T),
             "St Dev" = sd(get(input$sumstat), na.rm = T),
-            "per_10" = weighted_quantile(get(input$sumstat), w = sale_weight, 0.1, na.rm = T),
-            "per_25" = weighted_quantile(get(input$sumstat), w = sale_weight, 0.25, na.rm = T),
-            "Median" = weighted_median(get(input$sumstat), w = sale_weight, na.rm = T),
-            "per_75" = weighted_quantile(get(input$sumstat), w = sale_weight, 0.75, na.rm = T),
-            "per_90" = weighted_quantile(get(input$sumstat), w = sale_weight, 0.9, na.rm = T),
+            "per_10" = weighted_quantile(get(input$sumstat), w = sale, 0.1, na.rm = T),
+            "per_25" = weighted_quantile(get(input$sumstat), w = sale, 0.25, na.rm = T),
+            "Median" = weighted_median(get(input$sumstat), w = sale, na.rm = T),
+            "per_75" = weighted_quantile(get(input$sumstat), w = sale, 0.75, na.rm = T),
+            "per_90" = weighted_quantile(get(input$sumstat), w = sale, 0.9, na.rm = T),
             "count" = n()
           ) %>% ungroup()
           
@@ -1037,6 +1122,105 @@ server <- function(input, output, session) {
     }
     
   })
+  
+  
+  #Box plot
+  
+  
+  output$boxplot1 <- renderPlotly({
+    if(!is.null(input$var_select) & !is.null(input$boxnaics_1) & !is.null(input$boxyear_1)){
+      if(input$boxfacet == "None"){
+      df_box <- df_1()
+      
+      df_box <- filter(df_box, NAICS %in% c(input$boxnaics_1), fyear %in% c(input$boxyear_1))
+      
+      fig <- ggplot(df_box, aes(y=get(input$boxvar_1))) +  geom_boxplot() + theme_minimal()
+      
+      fig <- ggplotly(fig)
+      
+      
+      ax <- list(
+        title = "",
+        zeroline = TRUE,
+        showline = TRUE,
+        showticklabels = FALSE,
+        showgrid = FALSE
+      )
+      
+      
+      fig <- fig %>% layout(
+        xaxis = ax,
+        yaxis = list(title = input$boxvar_1),
+        showlegend = FALSE)
+      
+      }
+      else if(input$boxfacet == "Year"){
+        df_bp <- filter(df_1(), NAICS %in% c(input$boxnaics_1), fyear %in% c(input$boxyear_1))
+        
+        fig <- ggplot(df_bp, aes(x=as.factor(fyear), y=get(input$boxvar_1),color = as.factor(fyear), group = fyear)) +  geom_boxplot() + theme_minimal()
+        
+        fig <- ggplotly(fig)
+      
+  
+          fig <- fig %>% layout(
+            xaxis = list(title = 'Year'),
+          yaxis = list(title = input$boxvar_1),
+          showlegend = FALSE)
+          
+}
+      else{
+        df_bp <- filter(df_1(), NAICS %in% c(input$boxnaics_1), fyear %in% c(input$boxyear_1))
+        
+        fig <- ggplot(df_bp, aes(x=as.factor(NAICS), y=get(input$boxvar_1),color = NAICS, group = NAICS)) +  geom_boxplot() + theme_minimal()
+        
+        fig<- ggplotly(fig, tooltip = c("tic", input$boxvar_1))
+        fig <- fig %>% layout(
+          xaxis = list(title = 'NAICS'),
+          yaxis = list(title = input$boxvar_1),
+          showlegend = FALSE)
+      }
+    }
+    else {
+      fig <- plotly_empty()
+    }
+  })
+  
+  df_outliers <- reactive({
+    df_outliers1 <- filter(df_1(), NAICS %in% c(input$boxnaics_1), fyear %in% c(input$boxyear_1))
+    
+    df_outliers <- if(input$boxfacet == "Year"){
+      as.data.frame(df_outliers1 %>% 
+        group_by(fyear) %>% 
+        identify_outliers(input$boxvar_1))
+    } else if(input$boxfacet == "Industry"){
+      as.data.frame(df_outliers1 %>% 
+        group_by(NAICS) %>% 
+        identify_outliers(input$boxvar_1))
+    } else{
+      as.data.frame(df_outliers1 
+            %>% identify_outliers(input$boxvar_1))
+    }
+    })
+  
+  output$mydata_outliers <- DT::renderDataTable({
+    df_outliers1 <- df_outliers()
+    df_outliers1 <- mutate_if(df_outliers1, is.numeric, round, digits = 6)
+    
+    DT::datatable(df_outliers1[, input$show_vars_outliers, drop = FALSE],
+                  options = list(lengthMenu = c(10, 25, 50), pageLength = 10))
+  })
+  
+  
+  
+  output$downloadData_outliers <- downloadHandler(
+     
+     filename = function() {
+       paste("data_outliers-", Sys.Date(), ".csv", sep = "")
+     },
+     content = function(file) {
+       write.csv(df_outliers(), file)
+     }
+   )
   
   
   #Anmol's Plot
@@ -1204,6 +1388,7 @@ server <- function(input, output, session) {
     
     df_ellen <-filter(df_1(), NAICS %in% c(input$linenaics))
     
+    df_ellen <- as.data.frame(df_ellen)
     
     df_1 <- if(input$var_sub_line != "None selected"){
       df_2 <- df_ellen
